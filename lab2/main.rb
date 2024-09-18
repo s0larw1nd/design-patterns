@@ -7,6 +7,7 @@ class Student
      @surname = surname
      @first_name = first_name
      @patronymics = patronymics
+     raise StandardError.new "Неправильный номер телефона" unless options[:phone_number] == nil or Student.check_tel_num(options[:phone_number])
      @phone_number = options[:phone_number]
      @telegram = options[:telegram]
      @email = options[:email]
@@ -23,10 +24,14 @@ class Student
     s = s + "Git: #{@git}" if @git != nil
     s
   end
+
+  def self.check_tel_num num
+    return /^(\+\d-)?\(?[\d]{3}\)?[\s|-]?[\d]{3}-?[\d]{4}$/.match(num)
+  end
 end
 
-student1 = Student.new('Andreev', 'Andrey', 'Andreevich', telegram: "Telega")
-student2 = Student.new('Antonov', 'Anton', 'Antonovich', {email: 'cba@email.com', git: 'NewGit', phone_number: '+7987654321'})
+student1 = Student.new('Andreev', 'Andrey', 'Andreevich', telegram: "Telega", phone_number: '+7-555-123-5645')
+student2 = Student.new('Antonov', 'Anton', 'Antonovich', {email: 'cba@email.com', git: 'NewGit', phone_number: '+75551235645'})
 
 puts student1
 puts student2
