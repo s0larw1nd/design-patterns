@@ -2,7 +2,7 @@ class Student
   attr_accessor :surname, :first_name, :patronymics, :phone_number, :telegram, :email, :git
 
   @@num_obj = 0
-  def initialize(surname, first_name, patronymics, phone_number = nil, telegram  = nil, email = nil, git = nil)
+  def initialize(surname, first_name, patronymics, phone_number: nil, telegram: nil, email: nil, git: nil)
      @id = @@num_obj
      @surname = surname
      @first_name = first_name
@@ -25,8 +25,8 @@ class Student
   end
 end
 
-student1 = Student.new('Andreev', 'Andrey', 'Andreevich', '+7123456789', 'SolWind', 'abc@mail.com', 'GitName')
-student2 = Student.new('Antonov', 'Anton', 'Antonovich', '+7987654321', 'TelegName', 'cba@email.com', 'NewGit')
+student1 = Student.new('Andreev', 'Andrey', 'Andreevich', telegram: "Telega")
+student2 = Student.new('Antonov', 'Anton', 'Antonovich', email: 'cba@email.com', git: 'NewGit', phone_number: '+7987654321')
 
 puts student1
 puts student2
