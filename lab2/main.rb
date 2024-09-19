@@ -1,5 +1,6 @@
 class Student
-  attr_accessor :surname, :first_name, :patronymics, :phone_number, :telegram, :email, :git
+  attr_reader :phone_number, :telegram, :email
+  attr_accessor :id, :surname, :first_name, :patronymics, :git
 
   @@num_obj = 0
   def initialize(surname, first_name, patronymics, options = {})
@@ -54,6 +55,16 @@ class Student
 
   def self.is_valid_connections?(email, phone, telegram)
     [email, phone, telegram].any? { |word| !word.nil? }
+  end
+
+  def set_contacts(options = {})
+    raise StandardError.new("Неправильный номер телефона") unless options[:phone_number].nil? || Student.is_valid_tel_num?(options[:phone_number])
+    raise StandardError.new("Неправильный Telegram") unless options[:telegram].nil? || Student.is_valid_telegram?(options[:telegram])
+    raise StandardError.new("Неправильный E-mail") unless options[:email].nil? || Student.is_valid_email?(options[:email])
+
+    @phone_number = options[:phone_number] unless options[:phone_number].nil?
+    @telegram = options[:telegram] unless options[:telegram].nil?
+    @email = options[:email] unless options[:email].nil?
   end
 end
 
