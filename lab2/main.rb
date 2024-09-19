@@ -24,12 +24,25 @@ class Student
      @@num_obj += 1
   end
 
+  def self.new_from_string(string)
+    result = {}
+    pairs = string.split(';')
+    
+    pairs.each do |pair|
+      key, value = pair.split(':')
+      value = value[1..-2] if value.include? "'"
+      result[key] = value
+    end
+
+    result_opt = result.reject{ |key, value| key == "surname" || key == "first_name" || key == "patronymics" }
+    new(result["surname"], result["first_name"], result["patronymics"], result_opt.transform_keys(&:to_sym))
+  end
+
   def to_s
-    s = "id: #{@id}\nФамилия: #{@surname}\nИмя: #{@first_name}\nОтчество: #{@patronymics}\n"
-    s = s + "Номер телефона: #{@phone_number}\n" unless @phone_number.nil?
-    s = s + "Телеграм: #{@telegram}\n" unless @telegram.nil?
-    s = s + "Почта: #{@email}\n" unless @email.nil?
-    s = s + "Git: #{@git}" unless @git.nil?
+    s = "id:#{@id};surname:#{@surname};first_name:#{@first_name};patronymics:#{@patronymics};git:#{@git}"
+    s += ";phone_number:#{@phone_number}" unless @phone_number.nil?
+    s += ";telegram:#{@telegram}" unless @telegram.nil?
+    s += ";email:#{@email}" unless @email.nil?
     s
   end
 
@@ -68,8 +81,12 @@ class Student
   end
 end
 
-student1 = Student.new('Андреев', 'Андрей', 'Андреевич', telegram: "Telega")
+#student1 = Student.new('Андреев', 'Андрей', 'Андреевич', telegram: "Telega")
 student2 = Student.new('Антонов', 'Антон', 'Антонович', {email: 'cba@email.com', git: 'NewGit', phone_number: '+7-555-123-5645'})
+#student3 = Student.new_from_string("surname:Борисов,first_name:Борис,patronymics:Борисович,telegram:NewTelega,git:GenericGit")
+student1 = Student.new_from_string(student2.to_s)
 
-puts student1
+#puts student1
 puts student2
+#puts student3
+puts student1
