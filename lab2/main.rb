@@ -4,7 +4,7 @@ class Student
   @@num_obj = 0
   def initialize(surname, first_name, patronymics, options = {})
      @id = @@num_obj
-     raise StandardError.new "Неправильное ФИО" unless [surname, first_name, patronymics].all? { |word| Student.is_valid_name?(word) }
+     raise StandardError.new("Неправильное ФИО") unless [surname, first_name, patronymics].all? { |word| Student.is_valid_name?(word) }
      @surname = surname 
      @first_name = first_name
      @patronymics = patronymics
@@ -17,6 +17,8 @@ class Student
      @telegram = options[:telegram]
      @email = options[:email]
      @git = options[:git]
+
+     raise StandardError.new("Ошибка: требуется задать Git и хотя бы один контакт") unless Student.is_valid_git?(@git) && Student.is_valid_connections?(@email,@phone_number,@telegram)
      
      @@num_obj += 1
   end
@@ -30,7 +32,7 @@ class Student
     s
   end
 
-  def self.is_valid_tel_num? num
+  def self.is_valid_tel_num?(num)
     /^(\+\d-)?\(?[\d]{3}\)?[\s|-]?[\d]{3}-?[\d]{4}$/.match?(num)
   end
 
@@ -48,6 +50,10 @@ class Student
 
   def self.is_valid_git?(git)
     /^(([A-z0-9]-)?[A-z0-9]+){4,39}$/.match?(git)
+  end
+
+  def self.is_valid_connections?(email, phone, telegram)
+    [email, phone, telegram].any? { |word| !word.nil? }
   end
 end
 
