@@ -1,4 +1,45 @@
-class Student
+class Person
+  def self.is_valid_name?(name)
+    /^[А-я]{2,}$/.match?(name)
+  end
+
+  def self.is_valid_telegram?(telegram)
+    /^[A-z0-9_]{5,32}$/.match?(telegram)
+  end
+
+  def self.is_valid_tel_num?(num)
+    /^(\+\d-)?\(?[\d]{3}\)?[\s|-]?[\d]{3}-?[\d]{4}$/.match?(num)
+  end
+
+  def self.is_valid_email?(email)
+    /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i.match?(email)
+  end
+
+  def self.is_valid_git?(git)
+    /^(([A-z0-9]-)?[A-z0-9]+){4,39}$/.match?(git)
+  end
+
+  def self.is_valid_connections?(options = {})
+    if options[:string].nil?
+      [options[:email], options[:phone_number], options[:telegram]].any? { |word| !word.nil? }
+    else
+      pair = options[:string].split(':')
+      raise StandardError.new("Ошибка: некорректная строка") unless pair.count == 2
+      case pair[0]
+      when "phone_number"
+        raise StandardError.new("Неправильный номер телефона") unless Person.is_valid_tel_num?(pair[1])
+      when "telegram"
+        raise StandardError.new("Неправильный Telegram") unless Person.is_valid_telegram?(pair[1])
+      when "email"
+        raise StandardError.new("Неправильный E-mail") unless Person.is_valid_email?(pair[1])
+      else
+        raise StandardError.new("Ошибка: требуется задать контакт")
+      end
+    end
+  end
+end
+
+class Student < Person
   attr_reader :surname, :first_name, :patronymics, :phone_number, :telegram, :email, :git
   attr_accessor :id
 
@@ -18,8 +59,8 @@ class Student
      @telegram = options[:telegram]
      @email = options[:email]
      @git = options[:git]
-
-     raise StandardError.new("Ошибка: требуется задать Git и хотя бы один контакт") unless Student.is_valid_git?(@git) && Student.is_valid_connections?(@email,@phone_number,@telegram)
+ 
+     raise StandardError.new("Ошибка: требуется задать Git и хотя бы один контакт") unless Student.is_valid_git?(@git) && Student.is_valid_connections?(email:@email,phone_number:@phone_number,telegram:@telegram)
      
      @@num_obj += 1
   end
@@ -70,30 +111,6 @@ class Student
     end
   end
 
-  def self.is_valid_tel_num?(num)
-    /^(\+\d-)?\(?[\d]{3}\)?[\s|-]?[\d]{3}-?[\d]{4}$/.match?(num)
-  end
-
-  def self.is_valid_name?(name)
-    /^[А-я]{2,}$/.match?(name)
-  end
-
-  def self.is_valid_telegram?(telegram)
-    /^[A-z0-9_]{5,32}$/.match?(telegram)
-  end
-
-  def self.is_valid_email?(email)
-    /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i.match?(email)
-  end
-
-  def self.is_valid_git?(git)
-    /^(([A-z0-9]-)?[A-z0-9]+){4,39}$/.match?(git)
-  end
-
-  def self.is_valid_connections?(email, phone, telegram)
-    [email, phone, telegram].any? { |word| !word.nil? }
-  end
-
   def set_contacts(options = {})
     raise StandardError.new("Неправильный номер телефона") unless options[:phone_number].nil? || Student.is_valid_tel_num?(options[:phone_number])
     raise StandardError.new("Неправильный Telegram") unless options[:telegram].nil? || Student.is_valid_telegram?(options[:telegram])
@@ -113,7 +130,7 @@ puts student1
 puts student2
 puts student3
 
-class Student_short
+class Student_short < Person
   attr_reader :id, :name, :git, :contact
 
   def self.new_from_student(student)
@@ -130,42 +147,12 @@ class Student_short
     raise StandardError.new("Неправильное ФИО") unless Student_short.is_valid_name?(pairs[0])
     raise StandardError.new("Неправильный Git") unless Student_short.is_valid_git?(pairs[1])
 
-    case pairs[2].split(':')[0]
-    when "phone_number"
-      raise StandardError.new("Неправильный номер телефона") unless Student_short.is_valid_tel_num?(pairs[2].split(':')[1])
-    when "telegram"
-      raise StandardError.new("Неправильный Telegram") unless Student_short.is_valid_telegram?(pairs[2].split(':')[1])
-    when "email"
-      raise StandardError.new("Неправильный E-mail") unless Student_short.is_valid_email?(pairs[2].split(':')[1])
-    else
-      raise StandardError.new("Ошибка: требуется задать контакт")
-    end
+    Student_short.is_valid_connections?(string:pairs[2])
 
     @name = pairs[0]
     @git = pairs[1]
     @contact = pairs[2].split(':')[1]
   end
-
-  def self.is_valid_name?(name)
-    /^[А-я]{2,}$/.match?(name)
-  end
-
-  def self.is_valid_telegram?(telegram)
-    /^[A-z0-9_]{5,32}$/.match?(telegram)
-  end
-
-  def self.is_valid_tel_num?(num)
-    /^(\+\d-)?\(?[\d]{3}\)?[\s|-]?[\d]{3}-?[\d]{4}$/.match?(num)
-  end
-
-  def self.is_valid_email?(email)
-    /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i.match?(email)
-  end
-
-  def self.is_valid_git?(git)
-    /^(([A-z0-9]-)?[A-z0-9]+){4,39}$/.match?(git)
-  end
-
 end
 
 student4 = Student_short.new_from_student(student2)
