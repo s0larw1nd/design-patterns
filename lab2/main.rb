@@ -106,9 +106,36 @@ class Student
 end
 
 student1 = Student.new('Антонов', 'Антон', 'Антонович', {email: 'cba@email.com', git: 'NewGit', phone_number: '+7-555-123-5645'})
-student2 = Student.new_from_string("surname:Борисов.first_name:Борис;patronymics:Борисович;telegram:NewTelega;git:GenericGit;phone_number:'+7-555-123-5645'")
+student2 = Student.new_from_string("surname:Борисов;first_name:Борис;patronymics:Борисович;telegram:NewTelega;git:GenericGit;phone_number:'+7-555-123-5645'")
 student3 = Student.new_from_string(student2.to_s)
 
 puts student1
 puts student2
 puts student3
+
+class Student_short
+  attr_reader :id, :name, :git, :contact
+
+  def self.new_from_student(student)
+    id = student.id
+    new(id,student.getInfo)
+  end
+  
+  def initialize(id, string)
+    raise StandardError.new("Ошибка: требуется строка") unless string.is_a?(String)
+    @id = id
+    pairs = string.split(';')
+    raise StandardError.new("Ошибка: некорректная строка") if pairs.count < 3
+
+    @name = pairs[0]
+    @git = pairs[1]
+    @contact = pairs[2].split(':')[1]
+  end
+
+end
+
+student4 = Student_short.new_from_student(student2)
+student5 = Student_short.new(2,student3.get_info)
+
+p student4
+p student5
