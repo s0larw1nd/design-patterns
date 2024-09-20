@@ -1,0 +1,10 @@
+surname:Иванов;first_name:Иван;patronymics:Иванович;telegram:TechTalks;git:CodeMaster;phone_number:+7-555-987-6543
+surname:Смирнов;first_name:Алексей;patronymics:Алексеевич;email:AlexS@pochta.ru;git:DevAlex;phone_number:+7-555-876-5432
+surname:Петров;first_name:Дмитрий;patronymics:Дмитриевич;telegram:DmitryPetrov;git:PetrovCode;phone_number:+7-555-765-4321
+surname:Сидоров;first_name:Андрей;patronymics:Андреевич;git:SidorovDev;phone_number:+7-555-654-3210
+surname:Кузнецов;first_name:Владимир;patronymics:Владимирович;telegram:VladKuz;git:KuznetsovCode
+surname:Новиков;first_name:Николай;patronymics:Николаевич;email:NikNovikov@newpost.su;git:NovoGit
+surname:Фёдоров;first_name:Сергей;patronymics:Сергеевич;telegram:SergeyF;git:FedorovCode;phone_number:+7-555-321-0987
+surname:Михайлов;first_name:Артём;patronymics:Артемович;git:MikhailovDev;phone_number:+7-555-210-9876
+surname:Макаров;first_name:Григорий;patronymics:Григорьевич;telegram:GregMakarov;git:MakarovGit
+surname:Волков;first_name:Евгений;patronymics:Евгеньевич;email:EvgenyWolf@adress.ru;git:WolfDev

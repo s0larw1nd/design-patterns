@@ -1,6 +1,6 @@
 class Person
   def self.is_valid_name?(name)
-    /^[А-я]{2,}$/.match?(name)
+    /^[А-яЁё]{2,}$/.match?(name)
   end
 
   def self.is_valid_telegram?(telegram)
@@ -120,15 +120,18 @@ class Student < Person
     @telegram = options[:telegram] unless options[:telegram].nil?
     @email = options[:email] unless options[:email].nil?
   end
+
+  def self.read_from_txt(file_path)
+    raise StandardError.new("Ошибка: Файл не существует") unless File.file?(file_path)
+    students_list = []
+    File.open(file_path, "r") do |file|
+      file.each_line do |line|
+        students_list.push(Student.new_from_string(line.chomp))
+      end
+    end
+    students_list
+  end
 end
-
-student1 = Student.new('Антонов', 'Антон', 'Антонович', {email: 'cba@email.com', git: 'NewGit', phone_number: '+7-555-123-5645'})
-student2 = Student.new_from_string("surname:Борисов;first_name:Борис;patronymics:Борисович;telegram:NewTelega;git:GenericGit;phone_number:'+7-555-123-5645'")
-student3 = Student.new_from_string(student2.to_s)
-
-puts student1
-puts student2
-puts student3
 
 class Student_short < Person
   attr_reader :id, :name, :git, :contact
@@ -155,8 +158,6 @@ class Student_short < Person
   end
 end
 
-student4 = Student_short.new_from_student(student2)
-student5 = Student_short.new(2,"АнтоновАА;NewGit;email:cba@email.com")
-
-p student4
-p student5
+Student.read_from_txt("info.txt").each do |stud|
+  puts stud.getInfo
+end
