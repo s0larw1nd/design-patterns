@@ -127,15 +127,49 @@ class Student_short
     pairs = string.split(';')
     raise StandardError.new("Ошибка: некорректная строка") if pairs.count < 3
 
+    raise StandardError.new("Неправильное ФИО") unless Student_short.is_valid_name?(pairs[0])
+    raise StandardError.new("Неправильный Git") unless Student_short.is_valid_git?(pairs[1])
+
+    case pairs[2].split(':')[0]
+    when "phone_number"
+      raise StandardError.new("Неправильный номер телефона") unless Student_short.is_valid_tel_num?(pairs[2].split(':')[1])
+    when "telegram"
+      raise StandardError.new("Неправильный Telegram") unless Student_short.is_valid_telegram?(pairs[2].split(':')[1])
+    when "email"
+      raise StandardError.new("Неправильный E-mail") unless Student_short.is_valid_email?(pairs[2].split(':')[1])
+    else
+      raise StandardError.new("Ошибка: требуется задать контакт")
+    end
+
     @name = pairs[0]
     @git = pairs[1]
     @contact = pairs[2].split(':')[1]
   end
 
+  def self.is_valid_name?(name)
+    /^[А-я]{2,}$/.match?(name)
+  end
+
+  def self.is_valid_telegram?(telegram)
+    /^[A-z0-9_]{5,32}$/.match?(telegram)
+  end
+
+  def self.is_valid_tel_num?(num)
+    /^(\+\d-)?\(?[\d]{3}\)?[\s|-]?[\d]{3}-?[\d]{4}$/.match?(num)
+  end
+
+  def self.is_valid_email?(email)
+    /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i.match?(email)
+  end
+
+  def self.is_valid_git?(git)
+    /^(([A-z0-9]-)?[A-z0-9]+){4,39}$/.match?(git)
+  end
+
 end
 
 student4 = Student_short.new_from_student(student2)
-student5 = Student_short.new(2,student3.get_info)
+student5 = Student_short.new(2,"АнтоновАА;NewGit;email:cba@email.com")
 
 p student4
 p student5
