@@ -25,8 +25,10 @@ class Student
   end
 
   def self.new_from_string(string)
+    raise StandardError.new("Ошибка: требуется строка") unless string.is_a?(String)
     result = {}
     pairs = string.split(';')
+    raise StandardError.new("Ошибка: некорректная строка") unless pairs.length>=5
     
     pairs.each do |pair|
       key, value = pair.split(':')
@@ -81,12 +83,10 @@ class Student
   end
 end
 
-#student1 = Student.new('Андреев', 'Андрей', 'Андреевич', telegram: "Telega")
-student2 = Student.new('Антонов', 'Антон', 'Антонович', {email: 'cba@email.com', git: 'NewGit', phone_number: '+7-555-123-5645'})
-#student3 = Student.new_from_string("surname:Борисов,first_name:Борис,patronymics:Борисович,telegram:NewTelega,git:GenericGit")
-student1 = Student.new_from_string(student2.to_s)
+student1 = Student.new('Антонов', 'Антон', 'Антонович', {email: 'cba@email.com', git: 'NewGit', phone_number: '+7-555-123-5645'})
+student2 = Student.new_from_string("surname:Борисов.first_name:Борис;patronymics:Борисович;telegram:NewTelega;git:GenericGit;phone_number:'+7-555-123-5645'")
+student3 = Student.new_from_string(student2.to_s)
 
-#puts student1
-puts student2
-#puts student3
 puts student1
+puts student2
+puts student3
