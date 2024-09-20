@@ -1,6 +1,6 @@
 class Student
-  attr_reader :phone_number, :telegram, :email
-  attr_accessor :id, :surname, :first_name, :patronymics, :git
+  attr_reader :surname, :first_name, :patronymics, :phone_number, :telegram, :email, :git
+  attr_accessor :id
 
   @@num_obj = 0
   def initialize(surname, first_name, patronymics, options = {})
@@ -46,6 +46,28 @@ class Student
     s += ";telegram:#{@telegram}" unless @telegram.nil?
     s += ";email:#{@email}" unless @email.nil?
     s
+  end
+
+  def getInfo
+    info = self.get_full_name+";"+self.get_git+";"+self.get_contact
+  end
+
+  def get_full_name
+    "#{@surname}#{@first_name[0]}#{@patronymics[0]}"
+  end
+
+  def get_git
+    "#{@git}"
+  end
+
+  def get_contact
+    if @telegram != nil
+      "telegram:#{@telegram}"
+    elsif @email != nil
+      "email:#{@email}"
+    else
+      "phone_number:#{@phone_number}"
+    end
   end
 
   def self.is_valid_tel_num?(num)
