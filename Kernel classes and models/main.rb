@@ -18,25 +18,6 @@ class Person
   def self.is_valid_git?(git)
     /^(([A-z0-9]-)?[A-z0-9]+){4,39}$/.match?(git)
   end
-
-  def self.is_valid_connections?(options = {})
-    if options[:string].nil?
-      [options[:email], options[:phone_number], options[:telegram]].any? { |word| !word.nil? }
-    else
-      pair = options[:string].split(':')
-      raise StandardError.new("Ошибка: некорректная строка") unless pair.count == 2
-      case pair[0]
-      when "phone_number"
-        raise StandardError.new("Неправильный номер телефона") unless Person.is_valid_tel_num?(pair[1])
-      when "telegram"
-        raise StandardError.new("Неправильный Telegram") unless Person.is_valid_telegram?(pair[1])
-      when "email"
-        raise StandardError.new("Неправильный E-mail") unless Person.is_valid_email?(pair[1])
-      else
-        raise StandardError.new("Ошибка: требуется задать контакт")
-      end
-    end
-  end
 end
 
 class Student < Person
@@ -60,7 +41,7 @@ class Student < Person
      @email = options[:email]
      @git = options[:git]
  
-     raise StandardError.new("Ошибка: требуется задать Git и хотя бы один контакт") unless Student.is_valid_git?(@git) && Student.is_valid_connections?(email:@email,phone_number:@phone_number,telegram:@telegram)
+     raise StandardError.new("Ошибка: требуется задать Git и хотя бы один контакт") unless Student.is_valid_git?(@git) && Student.is_valid_connections?(@email,@phone_number,@telegram)
      
      @@num_obj += 1
   end
@@ -111,6 +92,10 @@ class Student < Person
     end
   end
 
+  def self.is_valid_connections?(email, phone, telegram)
+    [email, phone, telegram].any? { |word| !word.nil? }
+  end
+
   def set_contacts(options = {})
     raise StandardError.new("Неправильный номер телефона") unless options[:phone_number].nil? || Student.is_valid_tel_num?(options[:phone_number])
     raise StandardError.new("Неправильный Telegram") unless options[:telegram].nil? || Student.is_valid_telegram?(options[:telegram])
@@ -156,7 +141,16 @@ class Student_short < Person
     raise StandardError.new("Неправильное ФИО") unless Student_short.is_valid_name?(pairs[0])
     raise StandardError.new("Неправильный Git") unless Student_short.is_valid_git?(pairs[1])
 
-    Student_short.is_valid_connections?(string:pairs[2])
+    case pairs[2].split(':')[0]
+    when "phone_number"
+      raise StandardError.new("Неправильный номер телефона") unless Student_short.is_valid_tel_num?(pairs[2].split(':')[1])
+    when "telegram"
+      raise StandardError.new("Неправильный Telegram") unless Student_short.is_valid_telegram?(pairs[2].split(':')[1])
+    when "email"
+      raise StandardError.new("Неправильный E-mail") unless Student_short.is_valid_email?(pairs[2].split(':')[1])
+    else
+      raise StandardError.new("Ошибка: требуется задать контакт")
+    end
 
     @name = pairs[0]
     @git = pairs[1]
