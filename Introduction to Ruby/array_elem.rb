@@ -1,7 +1,7 @@
 def first_positive arr
   idx = 0
   while idx < arr.length
-    if arr[idx].to_f>0
+    if Float(arr[idx])>0
       return idx
     end
     idx=idx+1
@@ -10,18 +10,18 @@ def first_positive arr
 end
 
 def min_element arr
-  min_el = arr.first.to_f
+  min_el = Float(arr.first) 
   for elem in arr
-    min_el = elem if elem.to_f<min_el.to_f
+    min_el = Float(elem) if Float(elem)<min_el
   end
-
   return min_el
 end
 
-method = ARGV.first
-if File.file?(ARGV[1])
-  file = File.open(ARGV[1])
-  file_data = file.read.split(",")
+raise StandardError.new 'Ошибка: файл не существует' unless File.file?(ARGV[1])
+begin
+  file = File.open(ARGV[1], "r")
+  file_data = file.read.split(" ")
+  method = ARGV[0]
 
   if method == "min_elem" or method == "1"
     puts min_element file_data
@@ -30,9 +30,12 @@ if File.file?(ARGV[1])
     puts first_positive file_data
 
   else
-    puts "Ошибка"
+    raise StandardError.new 'Ошибка: неверный метод'
   end
-
-else
-  puts "Файл не существует"
+rescue ArgumentError
+  puts "Ошибка: неверный формат данных"
+rescue => e
+  puts "Ошибка: #{e.message}"
+ensure
+  file.close unless file.nil?
 end
