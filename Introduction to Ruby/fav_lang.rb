@@ -1,7 +1,7 @@
 puts "Hello, #{ARGV.first}"
 ARGV.clear
 
-print "Какой твой любимый язык? "
+puts "Какой твой любимый язык? "
 lang = gets
 exit if lang.nil? or lang.empty?
 lang.chomp!
@@ -17,7 +17,7 @@ else
   puts "Cкоро будет Ruby"
 end
 
-print "\nВведите Ruby команду: "
+puts "Введите Ruby команду: "
 comm_ruby = gets
 comm_ruby.chomp!
 begin
@@ -29,7 +29,7 @@ rescue NameError
 end
 
 
-print "\nВведите shell команду: "
+puts "Введите shell команду: "
 comm_shell = gets
 comm_shell.chomp!
 system( "#{comm_shell}" ) or puts "Ошибка выполнения команды"
