@@ -1,5 +1,16 @@
-def prime num
-  return Float::INFINITY # Т.к. существует бесконечное количество простых чисел
+def coprime num
+  k_coprime = 0
+  for temp in 2..num:
+    flag = 0
+    for del in 2..temp:
+      if num%del == 0 and temp%del == 0:
+          flag = 1
+          break
+      end
+    end
+    k_coprime += 1 unless flag == 1
+  end
+  return k_coprime
 end
 
 def digits_sum num
