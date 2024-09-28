@@ -1,9 +1,9 @@
 def coprime num
   k_coprime = 0
-  for temp in 2..num:
+  for temp in 2..num do
     flag = 0
-    for del in 2..temp:
-      if num%del == 0 and temp%del == 0:
+    for del in 2..temp do
+      if num%del == 0 and temp%del == 0 then
           flag = 1
           break
       end
