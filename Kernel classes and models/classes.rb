@@ -65,7 +65,7 @@ class Student < Person
     end
   end
 
-  def self.validate_git_and_connections
+  def validate_git_and_connections
     raise StandardError.new("Ошибка: требуется задать Git и хотя бы один контакт") unless Student.is_valid_git?(@git) && Student.is_valid_connections?(email: @email, phone: @phone_number, telegram: @telegram)
   end
 
