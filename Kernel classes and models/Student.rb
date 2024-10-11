@@ -1,41 +1,4 @@
-class Person
-  def self.is_valid_name?(name)
-    /^[А-яЁё]{2,}$/.match?(name)
-  end
-
-  def self.is_valid_telegram?(telegram)
-    /^[A-z0-9_]{5,32}$/.match?(telegram)
-  end
-
-  def self.is_valid_phone_number?(num)
-    /^(\+\d-)?\(?[\d]{3}\)?[\s|-]?[\d]{3}-?[\d]{4}$/.match?(num)
-  end
-
-  def self.is_valid_email?(email)
-    /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i.match?(email)
-  end
-
-  def self.is_valid_git?(git)
-    /^(([A-z0-9]-)?[A-z0-9]+){4,39}$/.match?(git)
-  end
-
-  def self.validate_options(**options)
-    option_validators = {
-      phone_number: method(:is_valid_phone_number?),
-      telegram: method(:is_valid_telegram?),
-      email: method(:is_valid_email?),
-      git: method(:is_valid_git?)
-    }
-
-    option_validators.each do |key, validator|
-      raise StandardError.new("Неправильный #{key.capitalize}") unless options[key].nil? || validator.call(options[key])
-    end
-  end
-
-  def self.is_valid_connections?(**connections)
-    [connections[:email], connections[:phone], connections[:telegram]].any? { |word| !word.nil? }
-  end
-end
+require_relative "Person"
 
 class Student < Person
   attr_reader :surname, :first_name, :patronymics, :phone_number, :telegram, :email
@@ -138,30 +101,5 @@ class Student < Person
     File.open("#{file_path}/#{file_name}", "w") do |file|
       file.puts(students_list)
     end
-  end
-end
-
-class Student_short < Person
-  attr_reader :id, :name, :git, :contact
-
-  def self.new_from_student(student)
-    id = student.id
-    new(id, student.getInfo)
-  end
-  
-  def initialize(id, string)
-    raise StandardError.new("Ошибка: требуется строка") unless string.is_a?(String)
-    @id = id
-    pairs = string.split(';')
-    raise StandardError.new("Ошибка: некорректная строка") if pairs.count < 3
-
-    raise StandardError.new("Неправильное ФИО") unless Student_short.is_valid_name?(pairs[0])
-    options = { "git" => pairs[1], pairs[2].split(':')[0] => pairs[2].split(':')[1] }.transform_keys(&:to_sym)
-    Student_short.validate_options(**options)
-    raise StandardError.new("Требуется задать контакт") unless Student_short.is_valid_connections?(**options)
-
-    @name = pairs[0]
-    @git = pairs[1]
-    @contact = pairs[2].split(':')[1]
   end
 end
