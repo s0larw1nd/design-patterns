@@ -1,9 +1,6 @@
 require_relative "Person"
 
 class Student < Person
-  attr_reader :surname, :first_name, :patronymics, :phone_number, :telegram, :email
-  attr_accessor :id
-
   @@num_obj = 0
   def initialize(surname, first_name, patronymics, **options)
      @id = @@num_obj
