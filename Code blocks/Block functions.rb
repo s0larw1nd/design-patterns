@@ -16,3 +16,14 @@ k_elem = find_between_a_b([0,1,2,3,4,5,6,7],1,6) do |array,a,b|
   k = to - from - 1
 end
 puts k_elem
+
+#task 26
+def find_between_min(array)
+  k_elem = yield array
+end
+
+k_elem_min = find_between_min([1,2,2,1]) do |array|
+  min_elem = array.min
+  k = array.rindex(min_elem) - array.index(min_elem) - 1
+end
+puts k_elem_min
