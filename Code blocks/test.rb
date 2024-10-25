@@ -25,5 +25,9 @@ class TestBlockArray < Test::Unit::TestCase
     assert_equal([5,6,7,8,9,10].inject { |sum, n| sum + n }, BlockArray.new([5,6,7,8,9,10]).inject { |sum, n| sum + n })
     assert_equal([5,6,7,8,9,10].inject(1) { |product, n| product * n }, BlockArray.new([5,6,7,8,9,10]).inject(1) { |product, n| product * n })
     assert_equal(['cat', 'sheep', 'bear'].inject { |memo, word| memo.length > word.length ? memo : word }, BlockArray.new(['cat', 'sheep', 'bear']).inject { |memo, word| memo.length > word.length ? memo : word })
+  
+    #2.23 min_by
+    assert_equal(['albatross ', 'dog', 'horse'].min_by { |x| x.length }, BlockArray.new(['albatross ', 'dog', 'horse']).min_by { |x| x.length })
+    assert_equal(['albatross ', 'dog', 'horse'].min_by(2) { |x| x.length }, BlockArray.new(['albatross ', 'dog', 'horse']).min_by(2) { |x| x.length })
   end 
 end

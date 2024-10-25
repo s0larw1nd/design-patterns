@@ -49,4 +49,33 @@ class BlockArray
     end
     return memo
   end
+  
+  def min_by(k_min=1, &block)
+    raise StandardError.new "Требуется передать блок в функцию" if !block_given?
+    raise IndexError.new "Количество минимальных элементов больше длины массива" if k_min > @array.length
+    min_elems = [@array[0]]
+    for elem_a in @array[1..k_min]
+      for id_elem_me in 0..k_min
+        if min_elems[id_elem_me].nil? 
+          min_elems.append(elem_a)
+          break
+        elsif !min_elems[id_elem_me+1].nil? && block.call(elem_a).between?(block.call(min_elems[id_elem_me]), block.call(min_elems[id_elem_me+1]))
+          min_elems.insert(id_elem_me+1, elem_a)
+          break
+        end
+      end
+    end
+
+    for elem_a in @array[1..@array.length()-1]
+      for id_elem_me in 0..min_elems.length-1
+        if block.call(min_elems[id_elem_me]) > block.call(elem_a)
+          min_elems.insert(id_elem_me,elem_a)
+          min_elems = min_elems[0..[0,k_min-1].max]
+          break
+        end
+      end
+    end
+    
+    if k_min == 1 then return min_elems[0] else return min_elems end
+  end
 end
