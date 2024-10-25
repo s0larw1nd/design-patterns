@@ -29,5 +29,11 @@ class TestBlockArray < Test::Unit::TestCase
     #2.23 min_by
     assert_equal(['albatross ', 'dog', 'horse'].min_by { |x| x.length }, BlockArray.new(['albatross ', 'dog', 'horse']).min_by { |x| x.length })
     assert_equal(['albatross ', 'dog', 'horse'].min_by(2) { |x| x.length }, BlockArray.new(['albatross ', 'dog', 'horse']).min_by(2) { |x| x.length })
+    
+    #2.11 find
+    assert_equal([1..10].find { |i| i % 5 == 0 and i % 7 == 0 }, BlockArray.new([1..10]).find { |i| i % 5 == 0 and i % 7 == 0 })
+    assert_equal([1..100].find { |i| i % 5 == 0 and i % 7 == 0 }, BlockArray.new([1..100]).find { |i| i % 5 == 0 and i % 7 == 0 })
+    assert_equal([1..10].find(lambda {"Нет совпадений"}) { |i| i % 5 == 0 and i % 7 == 0 },  BlockArray.new([1..10]).find(lambda {"Нет совпадений"}) { |i| i % 5 == 0 and i % 7 == 0 })
+    assert_equal([1..10].find(Proc.new {"Нет совпадений"}) { |i| i % 5 == 0 and i % 7 == 0 },  BlockArray.new([1..10]).find(Proc.new {"Нет совпадений"}) { |i| i % 5 == 0 and i % 7 == 0 })
   end 
 end

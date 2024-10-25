@@ -78,4 +78,16 @@ class BlockArray
     
     if k_min == 1 then return min_elems[0] else return min_elems end
   end
+
+  def find(ifnone = (no_value_set_by_user = true; nil), &block)
+    raise StandardError.new "Требуется передать блок в функцию" if !block_given?
+    for elem in @array
+      return elem if block.call(elem)
+    end
+    if no_value_set_by_user == true
+      return nil
+    else
+      return ifnone.call
+    end
+  end
 end
