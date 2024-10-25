@@ -39,4 +39,14 @@ class BlockArray
     end
     return k == 1
   end
+
+  def inject(initial_memo = (no_value_set_by_user = true; @array[0]), &block)
+    raise StandardError.new "Требуется передать блок в функцию" if !block_given?
+    memo = initial_memo
+    no_value_set_by_user == true ? start_id = 1 : start_id = 0
+    for element in @array[start_id..-1]
+      memo = block.call(memo, element)
+    end
+    return memo
+  end
 end
