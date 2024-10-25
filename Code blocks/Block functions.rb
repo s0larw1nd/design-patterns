@@ -27,3 +27,17 @@ k_elem_min = find_between_min([1,2,2,1]) do |array|
   k = array.rindex(min_elem) - array.index(min_elem) - 1
 end
 puts k_elem_min
+
+#task 38
+def find_between_a_b(array,a,b)
+  k_elem = yield array,a,b
+end
+
+k_elem_a_b = find_between_a_b([1,2,3,4,5,6,7,8],3,6) do |array,a,b|
+  k_elem = 0
+  array.each do |elem|
+    k += 1 if elem.between?(a,b)
+  end
+  k_elem
+end
+puts k_elem_a_b
