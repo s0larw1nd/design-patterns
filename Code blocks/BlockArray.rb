@@ -25,4 +25,18 @@ class BlockArray
     end
     return result_array
   end
+
+  def one?(&block)
+    k = 0
+    if block_given?
+      for elem in @array
+        k += 1 if block.call(elem)
+      end
+      return k == 1
+    end
+    for elem in @array
+      k += 1 if elem
+    end
+    return k == 1
+  end
 end
