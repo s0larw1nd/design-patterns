@@ -3,23 +3,23 @@ require_relative "Person"
 class Student < Person
   attr_reader :surname, :first_name, :patronymics, :telegram, :email, :phone_number
 
-  def initialize(surname, first_name, patronymics, options = {})
-     super(id: options[:id], git: options[:git])
+  def initialize(id: nil, surname: nil, first_name: nil, patronymics: nil, telegram: nil, email: nil, phone_number: nil, git: nil)
+     super(id: id, git: git)
+    
+     if Student.validate_full_name(surname, first_name, patronymics)
+      set_name(surname: surname, first_name: first_name, patronymics: patronymics)
+     else 
+      raise ArgumentError.new("Ошибка: некорректное ФИО") 
+     end
 
-     raise StandardError.new("Ошибка: некорректное ФИО") unless Student.validate_full_name(surname, first_name, patronymics)
-
-     self.instance_variable_set(:@surname, surname)
-     self.instance_variable_set(:@first_name, first_name)
-     self.instance_variable_set(:@patronymics, patronymics)
-
-     set_contacts(phone_number: options[:phone_number], telegram: options[:telegram], email: options[:email]) if Student.validate_options(options)
+     set_contacts(phone_number: phone_number, telegram: telegram, email: email) if Student.validate_options(phone_number: phone_number, telegram: telegram, email: email)
   end
 
   def self.new_from_string(string)
-    raise StandardError.new("Ошибка: требуется строка") unless string.is_a?(String)
+    raise ArgumentError.new("Ошибка: требуется строка") unless string.is_a?(String)
     result = {}
     pairs = string.split(';')
-    raise StandardError.new("Ошибка: некорректная строка") unless pairs.length>=5
+    raise ArgumentError.new("Ошибка: некорректная строка") unless pairs.length>=3
     
     pairs.each do |pair|
       key, value = pair.split(':')
@@ -28,41 +28,31 @@ class Student < Person
     end
 
     result_opt = result.reject{ |key, value| key == "surname" || key == "first_name" || key == "patronymics" }
-    new(result["surname"], result["first_name"], result["patronymics"], **result_opt.transform_keys(&:to_sym))
+    new(surname: result["surname"], first_name: result["first_name"], patronymics: result["patronymics"], **result_opt.transform_keys(&:to_sym))
   end
 
   def getInfo
     info = get_full_name+";"+get_git+";"+get_contact
   end
 
-  def get_full_name
-    "#{@surname}#{@first_name[0]}#{@patronymics[0]}"
-  end
-
-  def get_contact
-    if @telegram != nil
-      "telegram:#{@telegram}"
-    elsif @email != nil
-      "email:#{@email}"
-    else
-      "phone_number:#{@phone_number}"
-    end
-  end
-
-  def set_name(surname, first_name, patronymics)
-    raise StandardError.new("Ошибка: некорректное ФИО") unless Student.validate_full_name(surname, first_name, patronymics)
+  def set_name(surname: @surname, first_name: @first_name, patronymics: @patronymics)
+    raise ArgumentError.new("Ошибка: некорректное ФИО") unless Student.validate_full_name(surname, first_name, patronymics)
 
     self.instance_variable_set(:@surname, surname)
     self.instance_variable_set(:@first_name, first_name)
     self.instance_variable_set(:@patronymics, patronymics)
   end
 
-  def set_contacts(options = {})
-    raise StandardError.new("Ошибка: некорректные контакты") unless Student.validate_options(options)
+  def set_contacts(phone_number: nil, telegram: nil, email: nil)
+    raise ArgumentError.new("Ошибка: некорректные контакты") unless Student.validate_options(phone_number: phone_number, telegram: telegram, email: email)
 
-    self.instance_variable_set(:@phone_number, options[:phone_number]) unless options[:phone_number].nil?
-    self.instance_variable_set(:@telegram, options[:telegram]) unless options[:telegram].nil?
-    self.instance_variable_set(:@email, options[:email]) unless options[:email].nil?
+    self.instance_variable_set(:@phone_number, phone_number) unless phone_number.nil?
+    self.instance_variable_set(:@telegram, telegram) unless telegram.nil?
+    self.instance_variable_set(:@email, email) unless email.nil?
+  end
+
+  def has_git_and_connection?
+    validate_git and validate_connections 
   end
 
   private

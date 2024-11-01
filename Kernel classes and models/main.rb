@@ -14,13 +14,11 @@ end
 
 def write_to_txt(file_path, file_name, students_list)
   File.open("#{file_path}/#{file_name}", "w") do |file|
-    file.puts(students_list)
+    students_list.each do |stud|
+      file.puts stud.to_s.gsub!("\n", "").gsub!(" ", "")
+    end
   end
 end
 
-#Student.write_to_txt(".","info2.txt",Student.read_from_txt("info.txt"))
-#puts Student.read_from_txt("info2.txt")
-
-student = Student.new('Фамилия', 'Имя', 'Отчество', id:0, email: 'aboba@yand.ry')
-puts student
-s = Student_short.new_from_student(student)
+write_to_txt(".","info2.txt",read_from_txt("info.txt"))
+puts read_from_txt("info2.txt")

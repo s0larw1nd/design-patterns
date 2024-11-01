@@ -1,10 +1,51 @@
 class Person
   attr_reader :id
-  def initialize(options = {})
-    @id = options[:id] if options[:id]
-    @git = options[:git] if options[:git]
+  def initialize(id: nil, git: nil)
+    set_id(id) if id
+    set_git(git) if git
   end
 
+  def set_git(git)
+    raise ArgumentError.new("Ошибка: некорректный Git") unless Student.validate_options(git: git)
+
+    self.instance_variable_set(:@git, git)
+  end
+
+  def set_id(id)
+    raise ArgumentError.new("Ошибка: требуется задать id") unless id
+
+    self.instance_variable_set(:@id, id)
+  end
+
+  def get_git
+    "#{@git}"
+  end
+
+  def get_contact
+    return @contact if @contact
+    if Person.is_valid_telegram?(@telegram)
+      "telegram:#{@telegram}"
+    elsif Person.is_valid_email?(@email)
+      "email:#{@email}"
+    else
+      "phone_number:#{@phone_number}"
+    end
+  end
+
+  def get_full_name
+    "#{@surname}#{@first_name[0]}#{@patronymics[0]}"
+  end
+
+  def to_s
+    s = ""
+    instance_variables.each do |attr_name|
+      attr_value = instance_variable_get(attr_name)
+      s += "#{attr_name.to_s[1..-1]}: #{attr_value};\n"
+    end
+    s
+  end
+
+  private
   def self.is_valid_name?(name)
     /^[А-яЁё]{2,}$/.match?(name)
   end
@@ -38,18 +79,5 @@ class Person
 
   def self.is_valid_connections?(connections = {})
     [connections[:email], connections[:phone], connections[:telegram]].any? { |word| !word.nil? }
-  end
-
-  def to_s
-    s = ""
-    instance_variables.each do |attr_name|
-      attr_value = instance_variable_get(attr_name)
-      s += "#{attr_name.to_s[1..-1]}: #{attr_value};\n"
-    end
-    s
-  end
-
-  def get_git
-    "#{@git}"
   end
 end
