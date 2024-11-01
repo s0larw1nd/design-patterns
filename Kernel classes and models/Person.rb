@@ -1,4 +1,10 @@
 class Person
+  attr_reader :id
+  def initialize(options = {})
+    @id = options[:id] if options[:id]
+    @git = options[:git] if options[:git]
+  end
+
   def self.is_valid_name?(name)
     /^[А-яЁё]{2,}$/.match?(name)
   end
@@ -19,7 +25,7 @@ class Person
     /^(([A-z0-9]-)?[A-z0-9]+){4,39}$/.match?(git)
   end
 
-  def self.validate_options(**options)
+  def self.validate_options(options = {})
     option_validators = {
       phone_number: method(:is_valid_phone_number?),
       telegram: method(:is_valid_telegram?),
@@ -27,12 +33,23 @@ class Person
       git: method(:is_valid_git?)
     }
 
-    option_validators.each do |key, validator|
-      raise StandardError.new("Неправильный #{key.capitalize}") unless options[key].nil? || validator.call(options[key])
-    end
+    option_validators.all? {|key, validator| options[key].nil? || validator.call(options[key]) }
   end
 
-  def self.is_valid_connections?(**connections)
+  def self.is_valid_connections?(connections = {})
     [connections[:email], connections[:phone], connections[:telegram]].any? { |word| !word.nil? }
+  end
+
+  def to_s
+    s = ""
+    instance_variables.each do |attr_name|
+      attr_value = instance_variable_get(attr_name)
+      s += "#{attr_name.to_s[1..-1]}: #{attr_value};\n"
+    end
+    s
+  end
+
+  def get_git
+    "#{@git}"
   end
 end
