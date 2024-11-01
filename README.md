@@ -1,2 +1,2 @@
 Диаграмма классов
-![Blank diagram (1)](https://github.com/user-attachments/assets/5182c716-07a0-4049-8878-e817aebf285a)
+![4 drawio](https://github.com/user-attachments/assets/e854aa67-82e8-45fc-b812-f6518ece17cf)
