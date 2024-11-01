@@ -52,19 +52,11 @@ class Student < Person
   end
 
   def has_git_and_connection?
-    validate_git and validate_connections 
+    Student.is_valid_git?(@git) and Student.is_valid_connections?(email: @email, phone: @phone_number, telegram: @telegram) 
   end
 
   private
   def self.validate_full_name(surname, first_name, patronymics)
     return [surname, first_name, patronymics].all? { |word| Student.is_valid_name?(word) }
-  end
-
-  def validate_git
-    Student.is_valid_git?(@git)
-  end
-
-  def validate_connections
-    Student.is_valid_connections?(email: @email, phone: @phone_number, telegram: @telegram)
   end
 end

@@ -16,8 +16,8 @@ class Student_short < Person
     raise ArgumentError.new("Требуется задать контакт") unless Student_short.is_valid_connections?(options)
 
     super(id: id, git: pairs[1])
-    @short_name = pairs[0]
-    @contact = pairs[2].split(':')[1]
+    self.instance_variable_set(:@short_name, pairs[0])
+    self.instance_variable_set(:@contact, pairs[2].split(':')[1])
   end
 
   def get_full_name
