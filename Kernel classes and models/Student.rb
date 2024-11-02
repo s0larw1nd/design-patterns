@@ -5,14 +5,8 @@ class Student < Person
 
   def initialize(id: nil, surname: nil, first_name: nil, patronymics: nil, telegram: nil, email: nil, phone_number: nil, git: nil)
      super(id: id, git: git)
-    
-     if Student.validate_full_name(surname, first_name, patronymics)
-      set_name(surname: surname, first_name: first_name, patronymics: patronymics)
-     else 
-      raise ArgumentError.new("Ошибка: некорректное ФИО") 
-     end
-
-     set_contacts(phone_number: phone_number, telegram: telegram, email: email) if Student.validate_options(phone_number: phone_number, telegram: telegram, email: email)
+     set_name(surname: surname, first_name: first_name, patronymics: patronymics)
+     set_contacts(phone_number: phone_number, telegram: telegram, email: email)
   end
 
   def self.new_from_string(string)

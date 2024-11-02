@@ -18,14 +18,6 @@ class Student_short < Person
 
     super(id: id, git: options[:git])
     self.instance_variable_set(:@short_name, pairs[0])
-    self.instance_variable_set(:@contact, pairs[2].split(':')[1])
-  end
-
-  def get_full_name
-    @short_name
-  end
-
-  def has_git_and_connection?
-    Student_short.is_valid_git?(@git) and Student_short.is_valid_connections?(contact: @contact) 
+    self.instance_variable_set(:@contact, options[:email] || options[:phone_number] || options[:telegram]) if options[:email] || options[:phone_number] || options[:telegram]
   end
 end

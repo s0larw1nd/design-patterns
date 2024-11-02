@@ -22,17 +22,14 @@ class Person
   end
 
   def get_contact
-    return @contact if @contact
-    if Person.is_valid_telegram?(@telegram)
-      "telegram:#{@telegram}"
-    elsif Person.is_valid_email?(@email)
-      "email:#{@email}"
-    else
-      "phone_number:#{@phone_number}"
+    ['contact', 'telegram', 'email', 'phone_number'].each do |cont|
+      return "#{cont}:" + instance_variable_get("@#{cont}") unless instance_variable_get("@#{cont}").nil?
     end
+    ""
   end
 
   def get_full_name
+    return @short_name if @short_name
     "#{@surname}#{@first_name[0]}#{@patronymics[0]}"
   end
 
@@ -45,8 +42,12 @@ class Person
     s
   end
 
-  def has_git_and_connection?
-    Person.is_valid_git?(@git) and Person.is_valid_connections?(email: @email, phone: @phone_number, telegram: @telegram) 
+  def has_connection?
+    [@email, @phone, @telegram, @contact].any? { |cont| !cont.nil? }
+  end
+
+  def has_git?
+    !@git.nil?
   end
 
   private
@@ -79,9 +80,5 @@ class Person
     }
 
     option_validators.all? {|key, validator| options[key].nil? || validator.call(options[key]) }
-  end
-
-  def self.is_valid_connections?(connections = {})
-    [connections[:email], connections[:phone], connections[:telegram], connections[:contact]].any? { |word| !word.nil? }
   end
 end
