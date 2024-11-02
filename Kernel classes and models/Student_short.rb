@@ -24,4 +24,8 @@ class Student_short < Person
   def get_full_name
     @short_name
   end
+
+  def has_git_and_connection?
+    Student_short.is_valid_git?(@git) and Student_short.is_valid_connections?(contact: @contact) 
+  end
 end
