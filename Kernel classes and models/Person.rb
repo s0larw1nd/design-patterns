@@ -45,6 +45,10 @@ class Person
     s
   end
 
+  def has_git_and_connection?
+    Person.is_valid_git?(@git) and Person.is_valid_connections?(email: @email, phone: @phone_number, telegram: @telegram) 
+  end
+
   private
   def self.is_valid_name?(name)
     /^[А-яЁё]{2,}$/.match?(name)
@@ -78,6 +82,6 @@ class Person
   end
 
   def self.is_valid_connections?(connections = {})
-    [connections[:email], connections[:phone], connections[:telegram]].any? { |word| !word.nil? }
+    [connections[:email], connections[:phone], connections[:telegram], connections[:contact]].any? { |word| !word.nil? }
   end
 end
