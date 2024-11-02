@@ -51,10 +51,6 @@ class Student < Person
     self.instance_variable_set(:@email, email) unless email.nil?
   end
 
-  def has_git_and_connection?
-    Student.is_valid_git?(@git) and Student.is_valid_connections?(email: @email, phone: @phone_number, telegram: @telegram) 
-  end
-
   private
   def self.validate_full_name(surname, first_name, patronymics)
     return [surname, first_name, patronymics].all? { |word| Student.is_valid_name?(word) }
