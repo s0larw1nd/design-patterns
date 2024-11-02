@@ -8,13 +8,13 @@ class Person
   def set_git(git)
     raise ArgumentError.new("Ошибка: некорректный Git") unless Student.validate_options(git: git)
 
-    self.instance_variable_set(:@git, git)
+    instance_variable_set(:@git, git)
   end
 
   def set_id(id)
     raise ArgumentError.new("Ошибка: требуется задать id") unless id
 
-    self.instance_variable_set(:@id, id)
+    instance_variable_set(:@id, id)
   end
 
   def get_git

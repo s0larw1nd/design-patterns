@@ -32,17 +32,17 @@ class Student < Person
   def set_name(surname: @surname, first_name: @first_name, patronymics: @patronymics)
     raise ArgumentError.new("Ошибка: некорректное ФИО") unless Student.validate_full_name(surname, first_name, patronymics)
 
-    self.instance_variable_set(:@surname, surname)
-    self.instance_variable_set(:@first_name, first_name)
-    self.instance_variable_set(:@patronymics, patronymics)
+    instance_variable_set(:@surname, surname)
+    instance_variable_set(:@first_name, first_name)
+    instance_variable_set(:@patronymics, patronymics)
   end
 
   def set_contacts(phone_number: nil, telegram: nil, email: nil)
     raise ArgumentError.new("Ошибка: некорректные контакты") unless Student.validate_options(phone_number: phone_number, telegram: telegram, email: email)
 
-    self.instance_variable_set(:@phone_number, phone_number) unless phone_number.nil?
-    self.instance_variable_set(:@telegram, telegram) unless telegram.nil?
-    self.instance_variable_set(:@email, email) unless email.nil?
+    instance_variable_set(:@phone_number, phone_number) unless phone_number.nil?
+    instance_variable_set(:@telegram, telegram) unless telegram.nil?
+    instance_variable_set(:@email, email) unless email.nil?
   end
 
   private
