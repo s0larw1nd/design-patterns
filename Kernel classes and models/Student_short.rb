@@ -8,14 +8,15 @@ class Student_short < Person
   def initialize(id, string)
     raise ArgumentError.new("Ошибка: требуется строка") unless string.is_a?(String)
     pairs = string.split(';')
-    raise ArgumentError.new("Ошибка: некорректная строка") if pairs.count < 3
+    raise ArgumentError.new("Ошибка: некорректная строка") if pairs.count == 0
 
     raise ArgumentError.new("Неправильное ФИО") unless Student_short.is_valid_name?(pairs[0])
-    options = { "git" => pairs[1], pairs[2].split(':')[0] => pairs[2].split(':')[1] }.transform_keys(&:to_sym)
-    raise ArgumentError.new("Некорректный контакт") unless Student_short.validate_options(options)
-    raise ArgumentError.new("Требуется задать контакт") unless Student_short.is_valid_connections?(options)
+    options = {}
+    options[:git] = pairs[1] if pairs[1] != ""
+    options[pairs[2].split(':')[0].to_sym] = pairs[2].split(':')[1] if pairs[2]
+    raise ArgumentError.new("Некорректный git/контакт") unless Student_short.validate_options(options)
 
-    super(id: id, git: pairs[1])
+    super(id: id, git: options[:git])
     self.instance_variable_set(:@short_name, pairs[0])
     self.instance_variable_set(:@contact, pairs[2].split(':')[1])
   end
