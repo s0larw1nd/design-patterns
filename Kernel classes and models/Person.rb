@@ -18,7 +18,7 @@ class Person
   end
 
   def get_git
-    "#{@git}"
+    @git
   end
 
   def get_contact
