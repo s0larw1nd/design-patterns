@@ -2,12 +2,13 @@ require_relative "Person"
 
 class Student_short < Person
   def self.new_from_student(student)
-    new(student.id, student.getInfo)
+    raise ArgumentError.new("Ошибка: требуется передать аргумент класса Student") unless student.is_a?(Student)
+    new(id: student.id, data_string: student.getInfo)
   end
   
-  def initialize(id, string)
-    raise ArgumentError.new("Ошибка: требуется строка") unless string.is_a?(String)
-    pairs = string.split(';')
+  def initialize(id: nil, data_string: nil)
+    raise ArgumentError.new("Ошибка: требуется строка") unless data_string.is_a?(String)
+    pairs = data_string.split(';')
     raise ArgumentError.new("Ошибка: некорректная строка") if pairs.count == 0
 
     raise ArgumentError.new("Неправильное ФИО") unless Student_short.is_valid_name?(pairs[0])
