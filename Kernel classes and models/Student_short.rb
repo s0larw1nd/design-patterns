@@ -17,7 +17,7 @@ class Student_short < Person
     raise ArgumentError.new("Некорректный git/контакт") unless Student_short.validate_options(options)
 
     super(id: id, git: options[:git])
-    instance_variable_set(:@short_name, pairs[0])
+    instance_variable_set(:@surname_initials, pairs[0])
     instance_variable_set(:@contact, options[:email] || options[:phone_number] || options[:telegram]) if options[:email] || options[:phone_number] || options[:telegram]
   end
 end
