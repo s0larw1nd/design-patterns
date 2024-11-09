@@ -1,5 +1,5 @@
 class Person
-  attr_reader :id
+  attr_reader :id, :git
   def initialize(id: nil, git: nil)
     set_id(id) if id
     set_git(git) if git
@@ -15,10 +15,6 @@ class Person
     raise ArgumentError.new("Ошибка: требуется задать id") unless id
 
     instance_variable_set(:@id, id)
-  end
-
-  def get_git
-    @git
   end
 
   def get_contact
