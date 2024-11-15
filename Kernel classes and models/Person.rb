@@ -45,6 +45,10 @@ class Person
   def has_git?
     !@git.nil?
   end
+  
+  def has_connection_and_git?
+    return has_connection? && has_git?
+  end
 
   private
   def self.is_valid_name?(name)
