@@ -1,23 +1,24 @@
 class Person
   attr_reader :id, :git
   def initialize(id: nil, git: nil)
-    set_id(id) if id
-    set_git(git) if git
+    @id = id if id
+    raise ArgumentError.new("Ошибка: некорректный Git") unless Person.validate_options(git: git)
+    @git = git if git
   end
 
-  def set_git(git)
-    raise ArgumentError.new("Ошибка: некорректный Git") unless Student.validate_options(git: git)
+  def git=(git)
+    raise ArgumentError.new("Ошибка: некорректный Git") unless Person.validate_options(git: git)
 
     instance_variable_set(:@git, git)
   end
 
-  def set_id(id)
+  def id=(id)
     raise ArgumentError.new("Ошибка: требуется задать id") unless id
 
     instance_variable_set(:@id, id)
   end
 
-  def get_contact
+  def contact
     ['contact', 'telegram', 'email', 'phone_number'].each do |cont|
       return "#{cont}:" + instance_variable_get("@#{cont}") unless instance_variable_get("@#{cont}").nil?
     end
