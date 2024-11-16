@@ -25,7 +25,7 @@ class Person
     ""
   end
 
-  def get_full_name
+  def full_name
     return @surname_initials if @surname_initials
     "#{@surname}#{@first_name[0]}#{@patronymics[0]}"
   end
