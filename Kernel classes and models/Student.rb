@@ -26,7 +26,7 @@ class Student < Person
   end
 
   def getInfo
-    get_full_name+";"+(@git||"")+";"+get_contact
+    full_name+";"+(@git||"")+";"+get_contact
   end
 
   def set_name(surname: @surname, first_name: @first_name, patronymics: @patronymics)
