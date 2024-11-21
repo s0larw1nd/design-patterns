@@ -17,3 +17,8 @@ end
 def find_values_between_a_b(array,a,b)
   array.select { |elem| elem.between?(a,b) }.length
 end
+
+#task 50
+def find_difference_lists(l1,l2)
+  (l1.difference(l2) + l2.difference(l1)).filter { |elem| l1.count(elem) == l1.uniq.count(elem) && l2.count(elem) == l2.uniq.count(elem) }
+end
