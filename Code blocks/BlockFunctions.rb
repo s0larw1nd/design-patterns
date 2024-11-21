@@ -7,3 +7,8 @@ end
 def find_between_a_b_position(array,a,b)
   [array.length, b].min - [-1, a].max - 1
 end
+
+#task 26
+def find_between_min(array)
+  array.rindex(array.min) - array.index(array.min) - 1
+end
