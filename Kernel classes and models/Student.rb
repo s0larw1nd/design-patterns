@@ -1,12 +1,14 @@
 require_relative "Person"
+require 'date'
 
 class Student < Person
-  attr_reader :surname, :first_name, :patronymics, :telegram, :email, :phone_number
+  attr_reader :surname, :first_name, :patronymics, :telegram, :email, :phone_number, :birth_date
 
-  def initialize(id: nil, surname: nil, first_name: nil, patronymics: nil, telegram: nil, email: nil, phone_number: nil, git: nil)
+  def initialize(id: nil, surname: nil, first_name: nil, patronymics: nil, telegram: nil, email: nil, phone_number: nil, birth_date: nil, git: nil)
      super(id: id, git: git)
      set_name(surname: surname, first_name: first_name, patronymics: patronymics)
      set_contacts(phone_number: phone_number, telegram: telegram, email: email)
+     self.birth_date = birth_date unless birth_date.nil?
   end
 
   def self.new_from_string(string)
@@ -43,6 +45,10 @@ class Student < Person
     instance_variable_set(:@phone_number, phone_number) unless phone_number.nil?
     instance_variable_set(:@telegram, telegram) unless telegram.nil?
     instance_variable_set(:@email, email) unless email.nil?
+  end
+
+  def birth_date=(date)
+    @birth_date = Date.parse(date)
   end
 
   private
