@@ -4,7 +4,7 @@ def index_min(array)
 end
 
 #task 14
-def find_between_a_b_position(array,a,b)
+def find_between_a_b_positions(array,a,b)
   [array.length, b].min - [-1, a].max - 1
 end
 
@@ -14,7 +14,7 @@ def find_between_min(array)
 end
 
 #task 38
-def find_values_between_a_b(array,a,b)
+def find_between_a_b_values(array,a,b)
   array.select { |elem| elem.between?(a,b) }.length
 end
 
