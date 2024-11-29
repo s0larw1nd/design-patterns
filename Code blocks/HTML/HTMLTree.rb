@@ -1,32 +1,8 @@
+require_relative 'Tag'
+
 class HTMLTree
   include Enumerable
   attr_accessor :root
-
-  class Tag
-    attr_accessor :children, :value, :parent, :parameters
-    def initialize(tag)
-      @children = []
-      @parent = nil
-      @value = tag[:name]
-      @parameters = tag[:params]
-    end
-
-    def to_s
-      if !@parameters.nil?
-        "#{@value[0..@value.length-2]} #{@parameters.join(' ')}>"
-      else
-        @value
-      end
-    end
-
-    def children_count
-      @children.length
-    end
-
-    def has_children?
-      @children.empty?
-    end
-  end
 
   def tagify(string)
     closing = string.include?("</")
@@ -74,21 +50,32 @@ class HTMLTree
     end
   end
 
+  def each(mode = "dfs", &block)
+    send mode.to_sym, &block
+  end
+
+  private
   def bfs(&block)
     queue = [@root]
+    res = []
     until queue.empty?
       next_element = queue.shift
-      yield next_element
+      res << next_element
       queue += next_element.children
     end
+
+    res.each(&block)
   end
 
   def dfs(&block)
     stack = [@root]
+    res = []
     until stack.empty?
       next_element = stack.pop
-      yield next_element
+      res << next_element
       stack += next_element.children.reverse
     end
+
+    res.each(&block)
   end
 end

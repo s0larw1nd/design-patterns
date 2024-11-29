@@ -1,4 +1,4 @@
-require "./HTMLTree.rb"
+require_relative "HTMLTree"
 
 tree = HTMLTree.new('
 <html lang="en">
@@ -19,5 +19,5 @@ tree = HTMLTree.new('
 </html>
 ')
 
-tree.dfs { |node| puts node }
-tree.bfs { |node| puts node }
+tree.each { |node| puts node }
+tree.each('bfs') { |node| puts node }
