@@ -18,10 +18,22 @@ class Data_list
     end
 
     def get_names()
-        raise NotImplementedError.new('Метод не имплементирован для класса')
+        get_names_list
     end
 
     def get_data()
-        raise NotImplementedError.new('Метод не имплементирован для класса')
+        table = get_table
+        Data_table.new(table)
+    end
+
+    def list=(new_list)
+        @list = new_list
+    end
+    
+    private
+    def get_names_list
+    end
+
+    def get_table
     end
 end
