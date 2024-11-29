@@ -1,15 +1,14 @@
-require 'json'
+require 'yaml'
 
-class Students_list_JSON
+class Students_list_YAML
     def initialize(list = [])
         @list = list
     end
 
     def read_from_file(file_path)
         raise StandardError.new("Ошибка: Файл не существует") unless File.file?(file_path)
-
-        file = File.read(file_path)
-        data_hash = JSON.parse(file)
+        
+        data_hash = YAML.load_file(file_path)
         res = []
         data_hash.each_with_index do |el, id|
             el.transform_keys!(&:to_sym)
@@ -30,7 +29,7 @@ class Students_list_JSON
             res << el_hash
         end
 
-        File.write(file_path, JSON.dump(res))
+        File.write(file_path, res.to_yaml)
     end
 
     def get_student_at(id)
