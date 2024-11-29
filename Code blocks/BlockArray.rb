@@ -3,6 +3,10 @@ class BlockArray
     @array = array
   end
 
+  def at(id)
+    @array[id]
+  end
+
   def all?(&block)
     if block_given?
       for elem in @array
