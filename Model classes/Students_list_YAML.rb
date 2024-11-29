@@ -1,7 +1,7 @@
 require 'yaml'
-require_relative 'Students_list'
+require_relative 'File_strategy'
 
-class Students_list_YAML < Students_list
+class Students_list_YAML < File_strategy
     def read_from_file(file_path)
         raise StandardError.new("Ошибка: Файл не существует") unless File.file?(file_path)
         
@@ -13,12 +13,12 @@ class Students_list_YAML < Students_list
             res << Student.new(**el)
         end
 
-        @list = res
+        res
     end
 
-    def write_to_file(file_path)
+    def write_to_file(list, file_path)
         res = []
-        @list.each do |el|
+        list.each do |el|
             el_hash = {}
             el.instance_variables.each do |attr_name|
                 el_hash[attr_name.to_s.gsub("@","")] = el.instance_variable_get(attr_name)

@@ -1,6 +1,21 @@
 class Students_list
-    def initialize(list = [])
+    def initialize(strategy, list = [])
+        raise ArgumentError.new("Ошибка: требуется передать аргумент класса File_strategy") unless strategy.is_a?(File_strategy)
+        @strategy = strategy
         @list = list
+    end
+
+    def strategy=(strategy)
+        raise ArgumentError.new("Ошибка: требуется передать аргумент класса File_strategy") unless strategy.is_a?(File_strategy)
+        @strategy = strategy
+    end
+
+    def read_from_file(file_path)
+        @list = @strategy.read_from_file(file_path)
+    end
+
+    def write_to_file(file_path)
+        @strategy.write_to_file(@list, file_path)
     end
 
     def get_student_at(id)
