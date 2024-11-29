@@ -23,38 +23,48 @@ class BinarySearchTree
     @root = insert_node(@root, student)
   end
 
-  def bfs(&block)
-    queue = [@root]
-    until queue.empty?
-      next_element = queue.shift
-      unless next_element.nil?
-        yield next_element.value
-        queue += [next_element.left, next_element.right]
-      end
-    end
-  end
-
-  def dfs(&block)
-    stack = [@root]
-    until stack.empty?
-      next_element = stack.pop
-      unless next_element.nil?
-        yield next_element.value
-        stack += [next_element.right, next_element.left]
-      end
-    end
+  def each(mode = "dfs", &block)
+    send mode.to_sym, &block
   end
 
   private
   def insert_node(node, value)
     return Node.new(value) if node.nil?
 
-    if value.birth_date <= node.value.birth_date
+    if value <= node.value
       node.left = insert_node(node.left, value)
     else
       node.right = insert_node(node.right, value)
     end
 
     node
+  end
+
+  def bfs(&block)
+    queue = [@root]
+    res = []
+    until queue.empty?
+      next_element = queue.shift
+      unless next_element.nil?
+        res << next_element.value
+        queue += [next_element.left, next_element.right]
+      end
+    end
+
+    res.each(&block)
+  end
+
+  def dfs(&block)
+    stack = [@root]
+    res = []
+    until stack.empty?
+      next_element = stack.pop
+      unless next_element.nil?
+        res << next_element.value
+        stack += [next_element.right, next_element.left]
+      end
+    end
+
+    res.each(&block)
   end
 end

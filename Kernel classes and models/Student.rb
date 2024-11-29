@@ -2,6 +2,7 @@ require_relative "Person"
 require 'date'
 
 class Student < Person
+  include Comparable
   attr_reader :surname, :first_name, :patronymics, :telegram, :email, :phone_number, :birth_date
 
   def initialize(id: nil, surname: nil, first_name: nil, patronymics: nil, telegram: nil, email: nil, phone_number: nil, birth_date: nil, git: nil)
@@ -49,6 +50,22 @@ class Student < Person
 
   def birth_date=(date)
     @birth_date = Date.parse(date)
+  end
+
+  def id=(id)
+    raise ArgumentError.new("Ошибка: требуется задать id") unless id
+
+    instance_variable_set(:@id, id)
+  end
+
+  def git=(git)
+    raise ArgumentError.new("Ошибка: некорректный Git") unless Person.validate_options(git: git)
+
+    instance_variable_set(:@git, git)
+  end
+
+  def <=>(other)
+    self.birth_date <=> other.birth_date
   end
 
   private

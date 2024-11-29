@@ -6,18 +6,6 @@ class Person
     @git = git if git
   end
 
-  def git=(git)
-    raise ArgumentError.new("Ошибка: некорректный Git") unless Person.validate_options(git: git)
-
-    instance_variable_set(:@git, git)
-  end
-
-  def id=(id)
-    raise ArgumentError.new("Ошибка: требуется задать id") unless id
-
-    instance_variable_set(:@id, id)
-  end
-
   def contact
     ['contact', 'telegram', 'email', 'phone_number'].each do |cont|
       return "#{cont}:" + instance_variable_get("@#{cont}") unless instance_variable_get("@#{cont}").nil?
@@ -51,7 +39,6 @@ class Person
     return has_connection? && has_git?
   end
 
-  private
   def self.is_valid_name?(name)
     /^[А-яЁё]{2,}$/.match?(name)
   end
