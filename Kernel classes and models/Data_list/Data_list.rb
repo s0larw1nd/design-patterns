@@ -1,4 +1,4 @@
-require_relative "Data_table"
+require "../Data_table/Data_table.rb"
 
 class Data_list
     def initialize(list = [])

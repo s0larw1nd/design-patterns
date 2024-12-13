@@ -1,5 +1,5 @@
+require '../Student.rb'
 require_relative 'DB_connection'
-require_relative 'Student'
 
 class Students_list_DB
   @connection = DB_connection.instance
