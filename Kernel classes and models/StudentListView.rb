@@ -76,7 +76,6 @@ class StudentListView < FXMainWindow
       selected: nil,
       text_field: text_field
     }
-    p @filters
     rb_dk.check = true
 
     rb_yes.connect(SEL_COMMAND) { handle_radio_button(rw, rb_yes, true, text_field) }
