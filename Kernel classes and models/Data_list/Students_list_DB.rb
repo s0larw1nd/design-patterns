@@ -35,23 +35,28 @@ class Students_list_DB
     end
   end
 
-  def is_uniq?(stud):
-    for st_list in @list:
+  def is_uniq?(stud)
+    for st_list in @list
       for var in [:@telegram, :@email, :@phone_number, :@git]
         if !st_list.instance_variable_get(var).nil? && st_list.instance_variable_get(var) == stud.instance_variable_get(var)
-          return False
+          return false
         end
       end
     end
 
-    return True
+    return true
   end
 
   def add_student(stud)
-    raise ArgumentError.new("Ошибка: требуется передать аргумент класса Student") unless stud.is_a?(Student)
     raise ArgumentError.new("Ошибка: нарушение уникальности") if !is_uniq?(stud)
-    
-    stud.id = @list.max_by{ |student| student.id }.id+1
+    raise ArgumentError.new("Ошибка: требуется передать аргумент класса Student") unless stud.is_a?(Student)
+
+    if !@list.empty?
+      temp = @list.max_by{ |student| student.id }
+      stud.id = temp.id+1
+    else
+      stud.id = 1
+    end
     @list.append(stud)
   end
 

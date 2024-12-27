@@ -27,6 +27,15 @@ class Person
     s
   end
 
+  def to_hash
+    hash = {}
+    instance_variables.each do |attr_name|
+      attr_value = instance_variable_get(attr_name)
+      hash[attr_name.to_s.gsub("@","")] = attr_value.to_s
+    end
+    hash
+  end
+
   def has_connection?
     [@email, @phone, @telegram, @contact].any? { |cont| !cont.nil? }
   end
