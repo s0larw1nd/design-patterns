@@ -1,4 +1,5 @@
 class Students_list
+    attr_accessor :list
     def initialize(strategy, list = [])
         raise ArgumentError.new("Ошибка: требуется передать аргумент класса File_strategy") unless strategy.is_a?(File_strategy)
         @strategy = strategy
@@ -39,7 +40,7 @@ class Students_list
     end
     
     def sort()
-        @list.sort_by { |student| student.full_name }
+        return Students_list.new(@strategy, @list.sort_by { |student| student.full_name })
     end
 
     def sort!()
@@ -88,6 +89,6 @@ class Students_list
     end
 
     def get_student_short_count()
-        @list.count { |el| el.is_a?(Student_short) }
+        @list.size
     end
 end

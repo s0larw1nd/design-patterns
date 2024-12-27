@@ -50,3 +50,8 @@ tree.insert(student10)
 
 tree.dfs { |elem| puts elem}
 tree.bfs { |elem| puts elem}
+
+stud_list = Students_list.new(Students_list_JSON.new())
+stud_list.read_from_file("students.json")
+stud_list.strategy=Students_list_YAML.new()
+stud_list.write_to_file("students.yml")

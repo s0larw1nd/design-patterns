@@ -6,7 +6,7 @@ class Student < Person
   attr_reader :surname, :first_name, :patronymics, :telegram, :email, :phone_number, :birth_date
 
   def initialize(id: nil, surname: nil, first_name: nil, patronymics: nil, telegram: nil, email: nil, phone_number: nil, birth_date: nil, git: nil)
-     super(id: id, git: git)
+     super(id: id.to_i, git: git)
      set_name(surname: surname, first_name: first_name, patronymics: patronymics)
      set_contacts(phone_number: phone_number, telegram: telegram, email: email)
      self.birth_date = birth_date unless birth_date.nil?
