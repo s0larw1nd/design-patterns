@@ -4,14 +4,13 @@ require "./Data_list/Students_list_DB.rb"
 require "./Data_list/Students_list_JSON.rb"
 require "./Data_list/Students_list_YAML.rb"
 require "./Data_list/Students_list.rb"
-require_relative "Student"
+require "./Student.rb"
 include Fox
 
 class StudentListView < FXMainWindow
   def initialize(app)
     super(app, "Student List", width: 1080, height: 505)
 
-    @controller = nil
     @filters = {}
     @sorting = []
     @current_page = 1
@@ -46,7 +45,7 @@ class StudentListView < FXMainWindow
 
     FXLabel.new(parent, "Фамилия и инициалы:")
     name_text_field = FXTextField.new(parent, 25, opts: TEXTFIELD_NORMAL)
-    @filters[:name] = { text_field: name_text_field }
+    @filters[:full_name] = { text_field: name_text_field }
 
     add_filtering_row(parent, "Email:", :email)
     add_filtering_row(parent, "Телефон:", :phone_number)
@@ -88,6 +87,7 @@ class StudentListView < FXMainWindow
     selected_button.check = true
     @filters[rw][:selected] = value
     text_field.enabled = value
+    text_field.text = ""
   end
 
   def setup_table_area(parent)
@@ -149,7 +149,6 @@ class StudentListView < FXMainWindow
   def sort_table_by_column(col_idx=0)
     if col_idx == 1
       @table_shown.sort_by! { |student| student.full_name }
-
       if !@sorting.include?(col_idx)
         @sorting.append(col_idx)
       else
@@ -174,7 +173,7 @@ class StudentListView < FXMainWindow
     @edit_button.connect(SEL_COMMAND) { edit_entry() }
 
     @refresh_button = FXButton.new(parent, "Обновить", opts: BUTTON_NORMAL | LAYOUT_FILL_X)
-    @refresh_button.connect(SEL_COMMAND) { refresh_data() }
+    @refresh_button.connect(SEL_COMMAND) { apply_filter() }
 
     @table.connect(SEL_CHANGED) { update_buttons_state() }
 
@@ -199,6 +198,7 @@ class StudentListView < FXMainWindow
 
   def refresh_data
     clear_table()
+
     start = [@items_per_page*(@current_page-1), 0].max()
     @table_shown[start..(start+@items_per_page-1)].each_with_index do |val, row|
       @table.setItemText(row+1, 0, val.id.to_s)
@@ -206,6 +206,33 @@ class StudentListView < FXMainWindow
       @table.setItemText(row+1, 2, val.git)
       @table.setItemText(row+1, 3, val.contact)
     end
+  end
+
+  def apply_filter
+    filtered = []
+
+    import_table(@table_data)
+
+    @table_shown.each do |row|
+      f = true
+      @filters.keys.each do |filter|
+        temp_f = @filters[filter][:selected]
+        temp_r = row.instance_variable_get("@#{filter}".to_sym)
+
+        if !((temp_f == false && temp_r.nil?) || (temp_f == true && !temp_r.nil? && temp_r.include?(@filters[filter][:text_field].text)) || temp_f.nil?)
+          f = false
+        end
+      end
+      if f
+        filtered.append(row)
+      end
+    end
+
+    @table_shown = filtered
+    @total_pages = [1,(@table_shown.length / @items_per_page.to_f).ceil].max
+    change_page(-(@current_page-1))
+
+    refresh_data
   end
 
   def reset_filters
@@ -216,11 +243,16 @@ class StudentListView < FXMainWindow
         filter[:rb_dk].check = true
       end
       filter[:selected] = nil
-      if label != 'name' 
+      if label != :full_name
         filter[:text_field].enabled = false
       end
       filter[:text_field].setText("")
     end
+
+    import_table(@table_data)
+
+    @total_pages = [1,(@table_shown.length / @items_per_page.to_f).ceil].max
+    change_page(-(@current_page-1))
 
     refresh_data()
   end
