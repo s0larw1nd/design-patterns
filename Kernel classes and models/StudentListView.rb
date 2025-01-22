@@ -1,6 +1,7 @@
 require 'fox16'
 
 require "./Data_list/Students_list_DB.rb"
+require "./StudentListController.rb"
 require "./Data_list/Students_list_JSON.rb"
 require "./Data_list/Students_list_YAML.rb"
 require "./Data_list/Students_list.rb"
@@ -8,36 +9,51 @@ require "./Student.rb"
 include Fox
 
 class StudentListView < FXMainWindow
+  attr_reader :current_page, :items_per_page, :filters
+
   def initialize(app)
     super(app, "Student List", width: 1080, height: 505)
 
+    @controller = StudentListController.new(self)
     @filters = {}
     @sorting = []
     @current_page = 1
-    @items_per_page = 5
+    @items_per_page = 6
     @total_pages = 1
     
     @table_data = []
     @table_shown = []
 
-    main_frame = FXHorizontalFrame.new(self, LAYOUT_FILL_X | LAYOUT_FILL_Y)
+    tab_book = FXTabBook.new(self, opts: LAYOUT_FILL)
 
-    filter_frame = FXVerticalFrame.new(main_frame, LAYOUT_FIX_WIDTH, :width => 250, :padding => 10)
+    tab1 = FXTabItem.new(tab_book, "Список студентов", nil)
+    tab1_frame = FXVerticalFrame.new(tab_book, opts: LAYOUT_FILL)
+    setup_main_interface(tab1_frame)
+
+    tab2 = FXTabItem.new(tab_book, "Вкладка 2", nil)
+    tab2_frame = FXVerticalFrame.new(tab_book, opts: LAYOUT_FILL)
+    FXLabel.new(tab2_frame, "Это содержимое второй вкладки")
+
+    tab3 = FXTabItem.new(tab_book, "Вкладка 3", nil)
+    tab3_frame = FXVerticalFrame.new(tab_book, opts: LAYOUT_FILL)
+    FXLabel.new(tab3_frame, "Это содержимое третьей вкладки")
+  end
+
+  def setup_main_interface(parent)
+    main_frame = FXHorizontalFrame.new(parent, LAYOUT_FILL_X | LAYOUT_FILL_Y)
+
+    filter_frame = FXVerticalFrame.new(main_frame, LAYOUT_FIX_WIDTH, width: 250, padding: 10)
     setup_filter_area(filter_frame)
 
-    table_frame = FXVerticalFrame.new(main_frame, LAYOUT_FILL_X | LAYOUT_FILL_Y, :padding => 10)
+    table_frame = FXVerticalFrame.new(main_frame, LAYOUT_FILL_X | LAYOUT_FILL_Y, padding: 10)
     setup_table_area(table_frame)
 
-    control_frame = FXVerticalFrame.new(main_frame, LAYOUT_FIX_WIDTH, :width => 150, :padding => 10)
+    control_frame = FXVerticalFrame.new(main_frame, LAYOUT_FIX_WIDTH, width: 150, padding: 10)
     setup_control_area(control_frame)
 
     set_table_params(['№','name','git','contact'], 10)
 
-    student_list = Students_list.new(Students_list_YAML.new())
-    student_list.read_from_file("students.yml")
-    import_table(student_list)
-
-    refresh_data()
+    refresh_data
   end
 
   def setup_filter_area(parent)
@@ -45,7 +61,7 @@ class StudentListView < FXMainWindow
 
     FXLabel.new(parent, "Фамилия и инициалы:")
     name_text_field = FXTextField.new(parent, 25, opts: TEXTFIELD_NORMAL)
-    @filters[:full_name] = { text_field: name_text_field }
+    @filters[:full_name] = { selected: true, text_field: name_text_field }
 
     add_filtering_row(parent, "Email:", :email)
     add_filtering_row(parent, "Телефон:", :phone_number)
@@ -196,29 +212,29 @@ class StudentListView < FXMainWindow
     @page_label.text = "Страница #{@current_page} / #{@total_pages}"
   end
 
-  def refresh_data
-    clear_table()
-
-    start = [@items_per_page*(@current_page-1), 0].max()
-    @table_shown[start..(start+@items_per_page-1)].each_with_index do |val, row|
-      @table.setItemText(row+1, 0, val.id.to_s)
-      @table.setItemText(row+1, 1, val.full_name)
-      @table.setItemText(row+1, 2, val.git)
-      @table.setItemText(row+1, 3, val.contact)
+  def set_table_data(input_data_table)
+    clear_table
+    (0...input_data_table.rows).each do |row|
+        (0...input_data_table.columns).each do |col|
+            @table.setItemText(row+1, col, input_data_table.at(row, col).to_s)
+        end
     end
+  end
+
+  def refresh_data
+    @controller.refresh_data
   end
 
   def apply_filter
     filtered = []
-
-    import_table(@table_data)
 
     @table_shown.each do |row|
       f = true
       @filters.keys.each do |filter|
         temp_f = @filters[filter][:selected]
         temp_r = row.instance_variable_get("@#{filter}".to_sym)
-
+        
+        p row.instance_variables
         if !((temp_f == false && temp_r.nil?) || (temp_f == true && !temp_r.nil? && temp_r.include?(@filters[filter][:text_field].text)) || temp_f.nil?)
           f = false
         end
@@ -249,8 +265,6 @@ class StudentListView < FXMainWindow
       filter[:text_field].setText("")
     end
 
-    import_table(@table_data)
-
     @total_pages = [1,(@table_shown.length / @items_per_page.to_f).ceil].max
     change_page(-(@current_page-1))
 
@@ -266,15 +280,29 @@ class StudentListView < FXMainWindow
   end
 
   def add_entry
-    
+    @controller.add_entry
   end
 
   def edit_entry
-
+    @controller.edit_entry
   end
 
   def delete_entries
+    @controller.delete_entry
+  end
 
+  def edit_entry
+    (0...@table.numRows).each do |row_idx|
+      @controller.edit_entry(row_idx) if @table.rowSelected?(row_idx)
+    end
+  end
+
+  def delete_entries
+    selected_rows = []
+    (0...@table.numRows).each do |row_idx|
+      selected_rows << row_idx if @table.rowSelected?(row_idx)
+    end
+    @controller.delete_entries(selected_rows)
   end
 
   def create

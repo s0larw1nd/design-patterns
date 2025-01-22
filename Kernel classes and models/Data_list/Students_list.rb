@@ -1,3 +1,5 @@
+require_relative "../Student_short.rb"
+
 class Students_list
     attr_accessor :list
     def initialize(strategy, list = [])

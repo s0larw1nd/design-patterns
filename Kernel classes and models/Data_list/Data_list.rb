@@ -1,9 +1,12 @@
-require "../Data_table/Data_table.rb"
+require_relative "../Data_table/Data_table.rb"
 
 class Data_list
+    attr_writer :count
     def initialize(list = [])
         @list = list
+        @count = 0
         @selected = []
+        @observers = []
     end
 
     def select(number)
@@ -15,6 +18,14 @@ class Data_list
         @selected.each do |id| ret.append(@list[id]) end
         @selected.clear
         ret
+    end
+    
+    def notify
+        return if @observers.nil?
+        @observers.each do |observer|
+            observer.set_table_params(get_names, @count)
+            observer.set_table_data(get_data)
+        end
     end
 
     def get_names()
@@ -28,6 +39,10 @@ class Data_list
 
     def list=(new_list)
         @list = new_list
+    end
+
+    def add_observer(observer)
+        @observers.append(observer)
     end
     
     private
