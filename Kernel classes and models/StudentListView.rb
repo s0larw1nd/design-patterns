@@ -1,6 +1,6 @@
 require 'fox16'
 
-require "./Data_list/Students_list_DB.rb"
+#require "./Data_list/Students_list_DB.rb"
 require "./StudentListController.rb"
 require "./Data_list/Students_list_JSON.rb"
 require "./Data_list/Students_list_YAML.rb"
@@ -50,8 +50,6 @@ class StudentListView < FXMainWindow
 
     control_frame = FXVerticalFrame.new(main_frame, LAYOUT_FIX_WIDTH, width: 150, padding: 10)
     setup_control_area(control_frame)
-
-    set_table_params(['№','name','git','contact'], 10)
 
     refresh_data
   end
@@ -281,14 +279,6 @@ class StudentListView < FXMainWindow
 
   def add_entry
     @controller.add_entry
-  end
-
-  def edit_entry
-    @controller.edit_entry
-  end
-
-  def delete_entries
-    @controller.delete_entry
   end
 
   def edit_entry
