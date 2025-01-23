@@ -1,6 +1,6 @@
 require 'fox16'
 
-#require "./Data_list/Students_list_DB.rb"
+require "./Data_list/Students_list_DB.rb"
 require "./StudentListController.rb"
 require "./Data_list/Students_list_JSON.rb"
 require "./Data_list/Students_list_YAML.rb"
