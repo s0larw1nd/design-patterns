@@ -1,2 +1,5 @@
 Диаграмма классов
-![Диаграмма (1) drawio (3) drawio](https://github.com/user-attachments/assets/e9744ce3-02bc-4302-818a-089f58134ebc)
+![UML](https://github.com/user-attachments/assets/f9f1ba01-602d-4bca-8348-c404c22cd096)
+
+Диаграмма последовательностей
+![Seq diag drawio](https://github.com/user-attachments/assets/ee269b02-7ffb-491f-8d00-e6ed30eae285)
