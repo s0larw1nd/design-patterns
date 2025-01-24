@@ -35,17 +35,17 @@ class Students_list
         selected = @list[n*(k-1)..n*k-1].map { |stud| Student_short.new_from_student(stud) }
         
         if data_list.nil?
-            data_list = Data_list.new(selected)
+            data_list = Data_list_student_short.new(selected)
         else
             data_list.list = selected
         end
     end
     
-    def sort()
+    def sort_by_full_name()
         return Students_list.new(@strategy, @list.sort_by { |student| student.full_name })
     end
 
-    def sort!()
+    def sort_by_full_name!()
         @list.sort_by! { |student| student.full_name }
     end
 

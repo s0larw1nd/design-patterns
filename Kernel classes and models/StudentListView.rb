@@ -1,6 +1,6 @@
 require 'fox16'
 
-require "./Data_list/Students_list_DB.rb"
+#require "./Data_list/Students_list_DB.rb"
 require "./StudentListController.rb"
 require "./Data_list/Students_list_JSON.rb"
 require "./Data_list/Students_list_YAML.rb"
@@ -161,17 +161,7 @@ class StudentListView < FXMainWindow
   end
 
   def sort_table_by_column(col_idx=0)
-    if col_idx == 1
-      @table_shown.sort_by! { |student| student.full_name }
-      if !@sorting.include?(col_idx)
-        @sorting.append(col_idx)
-      else
-        @table_shown.reverse!
-        @sorting.delete(col_idx)
-      end
-    end
-
-    refresh_data()
+    @controller.sort_table_by_column(col_idx)
   end
 
   def setup_control_area(parent)

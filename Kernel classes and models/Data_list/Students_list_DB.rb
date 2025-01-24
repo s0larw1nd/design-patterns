@@ -1,4 +1,4 @@
-require '../Student.rb'
+require_relative '../Student.rb'
 require_relative 'DB_connection'
 
 class Students_list_DB

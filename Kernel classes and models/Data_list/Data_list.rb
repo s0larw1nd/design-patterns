@@ -20,11 +20,11 @@ class Data_list
         ret
     end
     
-    def notify
+    def notify(data)
         return if @observers.nil?
         @observers.each do |observer|
-            observer.set_table_params(get_names, @count)
-            observer.set_table_data(get_data)
+            observer.set_table_params(data.get_names, @count)
+            observer.set_table_data(data.get_data)
         end
     end
 
